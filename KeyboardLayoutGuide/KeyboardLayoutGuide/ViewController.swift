@@ -35,7 +35,7 @@ class ViewController<CustomView: View>: UIViewController {
     ///            It looks as a bug on iOS 11, since even the apple messages and facebook messenger apps don't handle this right.
     var automaticallyAdjustKeyboardLayoutGuide = false {
         willSet {
-            newValue ? registerForKeyboardNotifications() : stopObservingKeyboardNotifications()
+            newValue ? startObservingKeyboardNotifications() : stopObservingKeyboardNotifications()
         }
     }
 
@@ -47,6 +47,15 @@ class ViewController<CustomView: View>: UIViewController {
 
     /// Custom View
     let customView: CustomView
+
+    /// An array of notification names used by self.
+    private var keyboardNotifications: [Notification.Name] {
+        [
+            UIResponder.keyboardWillHideNotification,
+            UIResponder.keyboardWillShowNotification,
+            UIResponder.keyboardWillChangeFrameNotification
+        ]
+    }
 
     // MARK: Initializer
 
@@ -89,54 +98,39 @@ class ViewController<CustomView: View>: UIViewController {
 
 private extension ViewController {
 
-    func registerForKeyboardNotifications() {
-        let center = NotificationCenter.default
-        center.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { [weak self] notification in
-            guard let self = self else {
-                return
-            }
-            if self.automaticallyAdjustKeyboardLayoutGuide {
-                let offset = notification.keyboardRect?.height ?? 0
-                let animationDuration = notification.keyboardAnimationDuration ?? 0.25
-                self.adjustKeyboardHeightConstraint(byOffset: offset, animationDuration: animationDuration)
-            }
-            self.onKeyboardWillAppear?(notification)
-        }
-        center.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { [weak self] notification in
-            guard let self = self else {
-                return
-            }
-            if self.automaticallyAdjustKeyboardLayoutGuide {
-                let animationDuration = notification.keyboardAnimationDuration ?? 0.25
-                self.adjustKeyboardHeightConstraint(byOffset: 0, animationDuration: animationDuration)
-            }
-            self.onKeyboardWillDisappear?(notification)
-        }
-        center.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: nil) { [weak self] notification in
-            guard let self = self else {
-                return
-            }
-            if self.automaticallyAdjustKeyboardLayoutGuide, let offset = notification.keyboardRect?.height {
-                let animationDuration = notification.keyboardAnimationDuration ?? 0.25
-                self.adjustKeyboardHeightConstraint(byOffset: offset, animationDuration: animationDuration)
-            }
-        }
+    func startObservingKeyboardNotifications() {
+        keyboardNotifications.forEach { registerForNotification(name: $0) }
     }
 
     func stopObservingKeyboardNotifications() {
-        [
-            UIResponder.keyboardWillHideNotification,
-            UIResponder.keyboardWillShowNotification,
-            UIResponder.keyboardWillChangeFrameNotification
-        ].forEach {
-            NotificationCenter.default.removeObserver(self, name: $0, object: nil)
-        }
+        keyboardNotifications.forEach { NotificationCenter.default.removeObserver(self, name: $0, object: nil) }
     }
 
-    func adjustKeyboardHeightConstraint(byOffset offset: CGFloat, animationDuration: TimeInterval) {
-        customView.keyboardHeightConstraint.constant = offset
-        UIView.animate(withDuration: animationDuration) {
-            self.customView.layoutIfNeeded()
+    func registerForNotification(name: Notification.Name) {
+        NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil, using: handleNotification(name: name))
+    }
+
+    func handleNotification(name: Notification.Name) -> (Notification) -> Void {
+        { [weak self] notification in
+            guard let self = self, self.automaticallyAdjustKeyboardLayoutGuide, var offset = notification.keyboardRect?.height else {
+                return
+            }
+
+            switch name {
+            case UIResponder.keyboardWillHideNotification:
+                offset = 0
+                self.onKeyboardWillDisappear?(notification)
+            case UIResponder.keyboardWillShowNotification:
+                self.onKeyboardWillAppear?(notification)
+            default:
+                break
+            }
+
+            let animationDuration = notification.keyboardAnimationDuration ?? 0.25
+            self.customView.keyboardHeightConstraint.constant = offset
+            UIView.animate(withDuration: animationDuration) {
+                self.customView.layoutIfNeeded()
+            }
         }
     }
 }
