@@ -4,7 +4,7 @@
 **This repository is part of [Introduction To Missing Keyboard Layout Guide](https://www.netguru.com/codestories/introduction-to-missing-keyboard-layout-guide) code story. Read it for more information.**
 
 
-###Content
+### Content
 
 The repository contains a surprisingly simple solution used by me for the keyboard handling issue. It consists of [source files](https://github.com/PatrykKaczmarek/KeyboardLayoutGuide/tree/master/KeyboardLayoutGuide/KeyboardLayoutGuide) and 4 demo cases for:
 
