@@ -18,7 +18,7 @@ class View: UIView {
     ///
     /// - SeeAlso: View.keyboardLayoutGuide
     /// - SeeAlso: ViewController.automaticallyAdjustKeyboardLayoutGuide
-    private(set) lazy var keyboardHeightConstraint = keyboardLayoutGuide.heightAnchor.constraint(equalToConstant: 0)
+    private(set) lazy var keyboardHeightConstraint = keyboardLayoutGuideBackport.heightAnchor.constraint(equalToConstant: 0)
 
     /// Layout guide representing top of the keyboard.
     /// Equal to bottom layout guide of view when keyboard is not visible.
@@ -27,7 +27,7 @@ class View: UIView {
     ///
     /// - SeeAlso: View.keyboardHeightConstraint
     /// - SeeAlso: ViewController.automaticallyAdjustKeyboardLayoutGuide
-    let keyboardLayoutGuide = UILayoutGuide()
+    let keyboardLayoutGuideBackport = UILayoutGuide()
     
     // MARK: Initializer
 
@@ -37,10 +37,10 @@ class View: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .white
 
-        addLayoutGuide(keyboardLayoutGuide)
+        addLayoutGuide(keyboardLayoutGuideBackport)
         NSLayoutConstraint.activate([
             keyboardHeightConstraint,
-            keyboardLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor)
+            keyboardLayoutGuideBackport.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 
@@ -54,31 +54,5 @@ class View: UIView {
     /// - SeeAlso: UIView.requiresConstraintBasedLayout
     override static var requiresConstraintBasedLayout: Bool {
         true
-    }
-}
-
-class DemoView: UIView {
-    
-    let KeyboardLayoutGuide = UILayoutGuide()
-    
-    private(set) var keyboardHeightConstraint: NSLayoutConstraint?
-    
-    init() {
-        super.init(frame: .zero)
-
-        addLayoutGuide(KeyboardLayoutGuide)
-        let keyboardHeightConstraint = KeyboardLayoutGuide.heightAnchor.constraint(equalToConstant: 0)
-        NSLayoutConstraint.activate([
-            keyboardHeightConstraint,
-            KeyboardLayoutGuide.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-        self.keyboardHeightConstraint = keyboardHeightConstraint
-    }
-    
-    /// more methods
-    
-    @available(*, unavailable, message: "Use init() method instead.")
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

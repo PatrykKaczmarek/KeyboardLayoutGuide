@@ -1,6 +1,9 @@
 # KeyboardLayoutGuide
 
 
+> [!IMPORTANT]
+> Apple introduced in iOS 15 own version of [KeyboardLayoutGuide](https://developer.apple.com/documentation/uikit/keyboards_and_input/adjusting_your_layout_with_keyboard_layout_guide). Please use it instead. This approach supports at least iOS 11+ and was developed much earlier than the official API.
+
 **This repository is part of [Introduction To Missing Keyboard Layout Guide](https://www.netguru.com/codestories/introduction-to-missing-keyboard-layout-guide) code story. Read it for more information.**
 
 

@@ -43,7 +43,7 @@ final class TableViewCaseView: View {
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.topAnchor.constraint(equalTo: searchField.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor)
+            tableView.bottomAnchor.constraint(equalTo: keyboardLayoutGuideBackport.topAnchor)
         ])
     }
 }

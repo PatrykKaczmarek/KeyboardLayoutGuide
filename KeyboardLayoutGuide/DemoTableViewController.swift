@@ -16,7 +16,7 @@ final class DemoTableViewController: UITableViewController {
 
     // MARK: Properties
 
-    private let tableViewCellIdentifier = "\(String(describing: type(of: self))).cellIdentifier"
+    private let tableViewCellIdentifier = "\(String(describing: DemoTableViewController.self)).cellIdentifier"
 
     // MARK: Initalizer
 

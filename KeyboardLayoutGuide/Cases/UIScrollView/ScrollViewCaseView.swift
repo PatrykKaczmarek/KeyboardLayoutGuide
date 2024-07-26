@@ -59,7 +59,7 @@ final class ScrollViewCaseView: View {
             scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: keyboardLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: keyboardLayoutGuideBackport.topAnchor),
             
             goButton.trailingAnchor.constraint(equalTo: scrollView.contentView.trailingAnchor, constant: -20),
             goButton.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor),
